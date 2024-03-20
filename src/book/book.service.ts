@@ -1,19 +1,41 @@
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-
+import Book from './entity/book.schema';
 export class BookService {
   constructor() {}
 
-  async create(createBookDto: CreateBookDto) {}
+  async create(createBookDto: CreateBookDto) {
+    const createProps = {
+      author: createBookDto.author,
+      ISBN: createBookDto.ISBN,
+      pageNumber: createBookDto.pageNumber,
+      title: createBookDto.title,
+    } as CreateBookDto;
 
-  async findAll() {
-    console.log('CHEGOU NO SERVICE!!');
-    return [];
+    const book = new Book(createProps);
+    return await book.save();
   }
 
-  async findOne(id: string) {}
+  async findAll() {
+    return Book.find();
+  }
 
-  async update(id: string, updateBookDto: UpdateBookDto) {}
+  async findOne(id: string) {
+    return Book.findById(id);
+  }
 
-  async delete(id: string) {}
+  async update(id: string, updateBookDto: UpdateBookDto) {
+    const updateProps = {
+      author: updateBookDto.author ?? undefined,
+      ISBN: updateBookDto.ISBN ?? undefined,
+      pageNumber: updateBookDto.pageNumber ?? undefined,
+      title: updateBookDto.title ?? undefined,
+    } as UpdateBookDto;
+
+    return Book.findByIdAndUpdate(id, updateProps);
+  }
+
+  async delete(id: string) {
+    return Book.findByIdAndDelete(id);
+  }
 }
