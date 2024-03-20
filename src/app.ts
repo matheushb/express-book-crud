@@ -17,12 +17,12 @@ class App {
     this.app.use(express.json());
   }
 
-  private database() {
+  private async database() {
     try {
-      mongoose.connect(DATABASE_URL);
+      await mongoose.connect(DATABASE_URL);
       console.log('Connected to database.');
     } catch (err) {
-      console.log('Error connecting to database.');
+      console.log('Error connecting to database.', err);
     }
   }
 
