@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { BookService } from './book.service';
 
-class BookController {
+export class BookController {
   bookService: BookService;
 
-  constructor() {
-    this.bookService = new BookService();
+  constructor(bookService: BookService) {
+    this.bookService = bookService;
   }
 
   async create(req: Request, res: Response) {
@@ -36,5 +36,3 @@ class BookController {
     res.status(204);
   }
 }
-
-export default new BookController();
