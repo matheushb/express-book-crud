@@ -2,6 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import router from './router';
 import { DATABASE_URL } from './constants/constants';
+import { specs } from './config/swagger-config';
+import swaggerUi from 'swagger-ui-express';
 
 class App {
   app: express.Application;
@@ -15,6 +17,7 @@ class App {
 
   private middlewares() {
     this.app.use(express.json());
+    this.app.use('/api', swaggerUi.serve, swaggerUi.setup(specs));
   }
 
   private async database() {
