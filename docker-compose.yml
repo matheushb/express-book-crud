@@ -3,6 +3,6 @@ services:
   mongo:
     image: mongo
     restart: always
-    command: ['mongod', '--bind_ip_all', '--noauth']
+    command: ['--noauth']
     ports:
       - 27017:27017
