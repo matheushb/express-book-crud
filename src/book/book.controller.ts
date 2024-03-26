@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
 import { ReturnBook } from './types/return-book.interface';
 import bookService from './book.service';
+import { Controller } from '../inheritance/controller';
 
-export class BookController {
+export class BookController implements Controller<ReturnBook> {
   constructor() {}
 
   async create(req: Request, res: Response): Promise<Response<string>> {
-    await bookService.create(req.body);
-    return res.status(201).json('book successfully created');
+    const createdBook = await bookService.create(req.body);
+    return res.status(201).json(createdBook);
   }
 
   async findAll(req: Request, res: Response): Promise<Response<ReturnBook[]>> {
