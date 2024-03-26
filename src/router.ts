@@ -1,16 +1,11 @@
 import { Router } from 'express';
-import { BookController } from './book/book.controller';
-import { BookService } from './book/book.service';
-import { BookRepository } from './book/book.repository';
+import bookController from './book/book.controller';
 import { HealthCheckController } from './health-check/health-check.controller';
-
-const bookController = new BookController(
-  new BookService(new BookRepository())
-);
-
-const healthCheckController = new HealthCheckController();
+import { asyncErrorHandler } from './common/error/async-error-handler';
 
 const router = Router();
+
+const healthCheckController = new HealthCheckController();
 
 /**
  * @swagger
@@ -39,8 +34,9 @@ const router = Router();
  *               example:
  *                 message: API is running!
  */
-router.get('/health-check', (req, res) =>
-  healthCheckController.healthCheck(req, res)
+router.get(
+  '/health-check',
+  asyncErrorHandler(healthCheckController.healthCheck)
 );
 
 /**
@@ -67,7 +63,7 @@ router.get('/health-check', (req, res) =>
  *                  $ref: '#/components/schemas/ReturnBook'
  *
  * */
-router.get('/books', (req, res) => bookController.findAll(req, res));
+router.get('/books', asyncErrorHandler(bookController.findAll));
 
 /**
  * @swagger
@@ -89,7 +85,7 @@ router.get('/books', (req, res) => bookController.findAll(req, res));
  *             schema:
  *               $ref: '#/components/schemas/ReturnBook'
  * */
-router.post('/books', (req, res) => bookController.create(req, res));
+router.post('/books', asyncErrorHandler(bookController.create));
 
 /**
  * @swagger
@@ -112,7 +108,7 @@ router.post('/books', (req, res) => bookController.create(req, res));
  *             schema:
  *               $ref: '#/components/schemas/ReturnBook'
  * */
-router.get('/books/:id', (req, res) => bookController.findOne(req, res));
+router.get('/books/:id', asyncErrorHandler(bookController.findOne));
 
 /**
  * @swagger
@@ -141,7 +137,7 @@ router.get('/books/:id', (req, res) => bookController.findOne(req, res));
  *             schema:
  *               $ref: '#/components/schemas/ReturnBook'
  * */
-router.patch('/books/:id', (req, res) => bookController.update(req, res));
+router.patch('/books/:id', asyncErrorHandler(bookController.update));
 
 /**
  * @swagger
@@ -160,52 +156,6 @@ router.patch('/books/:id', (req, res) => bookController.update(req, res));
  *       204:
  *         description: Livro excluído com sucesso
  */
-router.delete('/books/:id', (req, res) => bookController.delete(req, res));
+router.delete('/books/:id', asyncErrorHandler(bookController.delete));
 
 export default router;
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     Book:
- *       type: object
- *       properties:
- *         title:
- *           type: string
- *           description: Título do livro
- *         author:
- *           type: string
- *           description: Autor do livro
- *         ISBN:
- *           type: string
- *           description: ISBN do livro
- *         pageNumber:
- *           type: integer
- *           description: Número de páginas do livro
- *     ReturnBook:
- *       type: object
- *       properties:
- *         title:
- *           type: string
- *           description: Título do livro
- *         author:
- *           type: string
- *           description: Autor do livro
- *         ISBN:
- *           type: string
- *           description: ISBN do livro
- *         pageNumber:
- *           type: integer
- *           description: Número de páginas do livro
- *         createdAt:
- *           type: string
- *           description: Data de criação do livro
- *         updatedAt:
- *           type: string
- *           description: Data de atualização do livro
- *         __v:
- *           type: integer
- *           description: Versão do documento
- *
- */
