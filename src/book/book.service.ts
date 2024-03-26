@@ -2,7 +2,7 @@ import HttpException from '../common/error/types/http.exception';
 import bookRepository from './book.repository';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { ReturnBook } from './interfaces/return-book.interface';
+import { ReturnBook } from './types/return-book.interface';
 import { Response } from 'express';
 class BookService {
   constructor() {}

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { ReturnBook } from './interfaces/return-book.interface';
+import { ReturnBook } from './types/return-book.interface';
 import bookService from './book.service';
 
 export class BookController {

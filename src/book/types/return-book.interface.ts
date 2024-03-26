@@ -1,4 +1,4 @@
-export interface ReturnBook {
+export type ReturnBook = {
   title: string;
   author: string;
   ISBN: string;
@@ -6,4 +6,4 @@ export interface ReturnBook {
   createdAt: string;
   updatedAt: string;
   __v: number;
-}
+};
