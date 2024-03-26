@@ -1,5 +1,4 @@
 import swaggerJSDoc from 'swagger-jsdoc';
-import { PORT } from '../constants/constants';
 import path from 'path';
 
 const options = {
@@ -10,22 +9,12 @@ const options = {
       version: '0.1.0',
       description:
         'This is a simple CRUD API application made with Express and documented with Swagger',
-      license: {
-        name: 'MIT',
-        url: 'https://spdx.org/licenses/MIT.html',
-      },
-      contact: {
-        name: 'Matheus Baraldi',
-        email: 'matheushbaraldi@gmail.com',
-      },
     },
-    servers: [
-      {
-        url: `http://localhost:${PORT}`,
-      },
-    ],
   },
-  apis: [path.resolve(__dirname, '../router.ts')],
-};
+  apis: [
+    path.resolve(__dirname, '../../router.ts'),
+    path.resolve(__dirname, '../../book/entity/book.schema.ts'),
+  ],
+} as swaggerJSDoc.Options;
 
 export const specs = swaggerJSDoc(options);
