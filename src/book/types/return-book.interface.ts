@@ -3,7 +3,7 @@ export type ReturnBook = {
   author: string;
   ISBN: string;
   pageNumber: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: NativeDate;
+  updatedAt: NativeDate;
   __v: number;
 };
