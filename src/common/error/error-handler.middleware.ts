@@ -15,9 +15,10 @@ export const errorMiddleware = (
     });
   }
   if (error.name == 'CastError') {
-    return res.status(404).json({
-      statusCode: 404,
-      message: 'Resource not found',
+    return res.status(400).json({
+      statusCode: 400,
+      error: 'Bad Request',
+      message: error.message,
     });
   }
 
