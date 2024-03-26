@@ -1,10 +1,13 @@
+import HttpException from '../common/error/types/http.exception';
+import bookRepository from './book.repository';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import Book from './entity/book.schema';
-export class BookService {
+import { ReturnBook } from './interfaces/return-book.interface';
+import { Response } from 'express';
+class BookService {
   constructor() {}
 
-  async create(createBookDto: CreateBookDto) {
+  async create(createBookDto: CreateBookDto): Promise<void> {
     const createProps = {
       author: createBookDto.author,
       ISBN: createBookDto.ISBN,
@@ -12,16 +15,24 @@ export class BookService {
       title: createBookDto.title,
     } as CreateBookDto;
 
-    const book = new Book(createProps);
-    return await book.save();
+    if (
+      !createProps.author ||
+      !createProps.ISBN ||
+      !createProps.pageNumber ||
+      !createProps.title
+    ) {
+      throw new HttpException(400, 'Bad Request.');
+    }
+
+    bookRepository.create(createProps);
   }
 
   async findAll() {
-    return Book.find();
+    return bookRepository.findAll();
   }
 
   async findOne(id: string) {
-    return Book.findById(id);
+    return await bookRepository.findOne(id);
   }
 
   async update(id: string, updateBookDto: UpdateBookDto) {
@@ -32,10 +43,23 @@ export class BookService {
       title: updateBookDto.title ?? undefined,
     } as UpdateBookDto;
 
-    return Book.findByIdAndUpdate(id, updateProps);
+    if (
+      !updateProps.author &&
+      !updateProps.ISBN &&
+      !updateProps.pageNumber &&
+      !updateProps.title
+    ) {
+      throw new HttpException(400, 'Bad Request.');
+    }
+
+    await bookRepository.update(id, updateProps);
+
+    return await this.findOne(id);
   }
 
   async delete(id: string) {
-    return Book.findByIdAndDelete(id);
+    return bookRepository.delete(id);
   }
 }
+
+export default new BookService();
