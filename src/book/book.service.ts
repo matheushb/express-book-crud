@@ -2,11 +2,12 @@ import HttpException from '../common/error/types/http.exception';
 import bookRepository from './book.repository';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { ReturnBook } from './types/return-book.interface';
 
 class BookService {
   constructor() {}
 
-  async create(createBookDto: CreateBookDto): Promise<void> {
+  async create(createBookDto: CreateBookDto) {
     const createProps = {
       author: createBookDto.author,
       ISBN: createBookDto.ISBN,
@@ -23,7 +24,7 @@ class BookService {
       throw new HttpException(400, 'Bad Request.');
     }
 
-    bookRepository.create(createProps);
+    return await bookRepository.create(createProps);
   }
 
   async findAll() {
@@ -31,7 +32,10 @@ class BookService {
   }
 
   async findOne(id: string) {
-    return await bookRepository.findOne(id);
+    const book = await bookRepository.findOne(id);
+    if (!book)
+      throw new HttpException(404, `Resource not found with id: ${id}`);
+    return book;
   }
 
   async update(id: string, updateBookDto: UpdateBookDto) {
@@ -56,8 +60,9 @@ class BookService {
     return await this.findOne(id);
   }
 
-  async delete(id: string) {
-    return bookRepository.delete(id);
+  async delete(id: string): Promise<void> {
+    await this.findOne(id);
+    await bookRepository.delete(id);
   }
 }
 
