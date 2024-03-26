@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 import router from './router';
 import swaggerUi from 'swagger-ui-express';
 import { DATABASE_URL } from './constants/constants';
-import { specs } from './config/swagger-config';
+import { specs } from './common/swagger/swagger-config';
+import { errorMiddleware } from './common/error/error-handler.middleware';
 
 class App {
   app: express.Application;
@@ -13,10 +14,11 @@ class App {
     this.middlewares();
     this.database();
     this.routes();
+    this.app.use(errorMiddleware);
   }
 
   private middlewares() {
-    this.app.use(express.json());
+    this.app.use(express.json({ limit: '50mb' }));
   }
 
   private async database() {
